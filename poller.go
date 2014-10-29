@@ -98,7 +98,7 @@ func (p *poller) poll(interval time.Duration, quit <-chan bool) <-chan *job {
 					return
 				}
 				if job != nil {
-					conn.Send("INCR", fmt.Sprintf("%sstat:processed:%v", namespace, p))
+					conn.Incr(namespace, Processed, p)
 					conn.Flush()
 					PutConn(conn)
 					select {

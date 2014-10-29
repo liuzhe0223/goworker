@@ -87,3 +87,12 @@ func (conn *RedisConn) Lpop(namespace, queue string) (reply interface{}, err err
 	reply, err = conn.Do("LPOP", fmt.Sprintf("%squeue:%s", namespace, queue))
 	return
 }
+
+func (conn *RedisConn) Incr(namespace string, status Status, args interface{}) {
+	if args == nil {
+		conn.Send("INCR", fmt.Sprintf("%s%s", namespace, status))
+		return
+	}
+
+	conn.Send("INCR", fmt.Sprintf("%s%s:%v", namespace, status, args))
+}

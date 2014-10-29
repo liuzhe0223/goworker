@@ -68,8 +68,8 @@ func (p *process) finish(conn *RedisConn) error {
 }
 
 func (p *process) fail(conn *RedisConn) error {
-	conn.Send("INCR", fmt.Sprintf("%sstat:failed", namespace))
-	conn.Send("INCR", fmt.Sprintf("%sstat:failed:%s", namespace, p))
+	conn.Incr(namespace, Failed, nil)
+	conn.Incr(namespace, Failed, p)
 	conn.Flush()
 
 	return nil
