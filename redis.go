@@ -82,8 +82,16 @@ func redisConnFromUri(uriString string) (*RedisConn, error) {
 	return &RedisConn{Conn: conn}, nil
 }
 
+func (conn *RedisConn) Set(key string, value interface{}) {
+	conn.Send("SET", key, value)
+}
+
 func (conn *RedisConn) Lpush(key string, value interface{}) {
 	conn.Send("LPUSH", key, value)
+}
+
+func (conn *RedisConn) Rpush(key string, value interface{}) {
+	conn.Send("RPUSH", key, value)
 }
 
 func (conn *RedisConn) Lpop(key string) (reply interface{}, err error) {

@@ -35,8 +35,8 @@ func (p *process) String() string {
 
 func (p *process) open(conn *RedisConn) error {
 	conn.Sadd(fmt.Sprintf("%sworkers", namespace), p)
-	conn.Send("SET", fmt.Sprintf("%sstat:processed:%v", namespace, p), "0")
-	conn.Send("SET", fmt.Sprintf("%sstat:failed:%v", namespace, p), "0")
+	conn.Set(fmt.Sprintf("%sstat:processed:%v", namespace, p), "0")
+	conn.Set(fmt.Sprintf("%sstat:failed:%v", namespace, p), "0")
 	conn.Flush()
 
 	return nil
@@ -53,7 +53,7 @@ func (p *process) close(conn *RedisConn) error {
 }
 
 func (p *process) start(conn *RedisConn) error {
-	conn.Send("SET", fmt.Sprintf("%sworker:%s:started", namespace, p), time.Now().String())
+	conn.Set(fmt.Sprintf("%sworker:%s:started", namespace, p), time.Now().String())
 	conn.Flush()
 
 	return nil
