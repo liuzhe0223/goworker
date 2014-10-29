@@ -83,6 +83,10 @@ func redisConnFromUri(uriString string) (*RedisConn, error) {
 	return &RedisConn{Conn: conn}, nil
 }
 
+func (conn *RedisConn) Lpush(namespace, queue string, buf []byte) {
+	conn.Send("LPUSH", fmt.Sprintf("%squeue:%s", namespace, queue), buf)
+}
+
 func (conn *RedisConn) Lpop(namespace, queue string) (reply interface{}, err error) {
 	reply, err = conn.Do("LPOP", fmt.Sprintf("%squeue:%s", namespace, queue))
 	return
