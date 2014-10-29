@@ -106,3 +106,11 @@ func (conn *RedisConn) Incr(key string) {
 func (conn *RedisConn) Sadd(key string, value interface{}) {
 	conn.Send("SADD", key, value)
 }
+
+func (conn *RedisConn) Srem(key string, value interface{}) {
+	conn.Send("SREM", key, value)
+}
+
+func (conn *RedisConn) Del(key string) {
+	conn.Send("DEL", key)
+}
