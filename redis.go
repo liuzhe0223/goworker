@@ -100,3 +100,7 @@ func (conn *RedisConn) Incr(namespace string, status Status, args interface{}) {
 
 	conn.Send("INCR", fmt.Sprintf("%s%s:%v", namespace, status, args))
 }
+
+func (conn *RedisConn) Sadd(namespace string, i interface{}) {
+	conn.Send("SADD", fmt.Sprintf("%sworkers", namespace), i)
+}
