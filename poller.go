@@ -3,6 +3,7 @@ package goworker
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -26,7 +27,7 @@ func (p *poller) getJob(conn *RedisConn) (*job, error) {
 	for _, queue := range p.queues(p.isStrict) {
 		logger.Debugf("Checking %s", queue)
 
-		reply, err := conn.Lpop(namespace, queue)
+		reply, err := conn.Lpop(fmt.Sprintf("%squeue:%s", namespace, queue))
 		if err != nil {
 			return nil, err
 		}
@@ -97,7 +98,7 @@ func (p *poller) poll(interval time.Duration, quit <-chan bool) <-chan *job {
 					return
 				}
 				if job != nil {
-					conn.Incr(namespace, Processed, p)
+					conn.Incr(fmt.Sprintf("%sstat:processed:%v", namespace, p))
 					conn.Flush()
 					PutConn(conn)
 					select {
@@ -114,7 +115,7 @@ func (p *poller) poll(interval time.Duration, quit <-chan bool) <-chan *job {
 							return
 						}
 
-						conn.Lpush(namespace, job.Queue, buf)
+						conn.Lpush(fmt.Sprintf("%squeue:%s", namespace, job.Queue), buf)
 						conn.Flush()
 						return
 					}

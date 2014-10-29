@@ -3,7 +3,6 @@ package goworker
 import (
 	"code.google.com/p/vitess/go/pools"
 	"errors"
-	"fmt"
 	"github.com/garyburd/redigo/redis"
 	"net/url"
 	"time"
@@ -83,24 +82,19 @@ func redisConnFromUri(uriString string) (*RedisConn, error) {
 	return &RedisConn{Conn: conn}, nil
 }
 
-func (conn *RedisConn) Lpush(namespace, queue string, buf []byte) {
-	conn.Send("LPUSH", fmt.Sprintf("%squeue:%s", namespace, queue), buf)
+func (conn *RedisConn) Lpush(key string, value interface{}) {
+	conn.Send("LPUSH", key, value)
 }
 
-func (conn *RedisConn) Lpop(namespace, queue string) (reply interface{}, err error) {
-	reply, err = conn.Do("LPOP", fmt.Sprintf("%squeue:%s", namespace, queue))
+func (conn *RedisConn) Lpop(key string) (reply interface{}, err error) {
+	reply, err = conn.Do("LPOP", key)
 	return
 }
 
-func (conn *RedisConn) Incr(namespace string, status Status, args interface{}) {
-	if args == nil {
-		conn.Send("INCR", fmt.Sprintf("%s%s", namespace, status))
-		return
-	}
-
-	conn.Send("INCR", fmt.Sprintf("%s%s:%v", namespace, status, args))
+func (conn *RedisConn) Incr(key string) {
+	conn.Send("INCR", key)
 }
 
-func (conn *RedisConn) Sadd(namespace string, i interface{}) {
-	conn.Send("SADD", fmt.Sprintf("%sworkers", namespace), i)
+func (conn *RedisConn) Sadd(key string, value interface{}) {
+	conn.Send("SADD", key, value)
 }

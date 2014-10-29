@@ -63,8 +63,8 @@ func (w *worker) fail(conn *RedisConn, job *job, err error) error {
 }
 
 func (w *worker) succeed(conn *RedisConn, job *job) error {
-	conn.Incr(namespace, Processed, nil)
-	conn.Incr(namespace, Processed, w)
+	conn.Incr(fmt.Sprintf("%sstat:processed", namespace))
+	conn.Incr(fmt.Sprintf("%sstat:processed:%s", namespace, w))
 
 	return nil
 }
