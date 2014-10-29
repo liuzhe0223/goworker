@@ -3,7 +3,6 @@ package goworker
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"time"
 )
 
