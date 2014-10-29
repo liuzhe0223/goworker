@@ -3,6 +3,7 @@ package goworker
 import (
 	"code.google.com/p/vitess/go/pools"
 	"errors"
+	"fmt"
 	"github.com/garyburd/redigo/redis"
 	"net/url"
 	"time"
@@ -80,4 +81,9 @@ func redisConnFromUri(uriString string) (*RedisConn, error) {
 	}
 
 	return &RedisConn{Conn: conn}, nil
+}
+
+func (conn *RedisConn) Lpop(namespace, queue string) (reply interface{}, err error) {
+	reply, err = conn.Do("LPOP", fmt.Sprintf("%squeue:%s", namespace, queue))
+	return
 }

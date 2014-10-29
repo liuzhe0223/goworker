@@ -27,7 +27,7 @@ func (p *poller) getJob(conn *RedisConn) (*job, error) {
 	for _, queue := range p.queues(p.isStrict) {
 		logger.Debugf("Checking %s", queue)
 
-		reply, err := conn.Do("LPOP", fmt.Sprintf("%squeue:%s", namespace, queue))
+		reply, err := conn.Lpop(namespace, queue)
 		if err != nil {
 			return nil, err
 		}
