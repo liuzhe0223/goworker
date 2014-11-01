@@ -29,7 +29,7 @@ func Init() error {
 		return err
 	}
 
-	pool = newRedisPool(uri, connections, connections, time.Minute)
+	pool = newConnPool(storageEngine)
 
 	return nil
 }
