@@ -23,7 +23,7 @@ func newPoller(queues []string, isStrict bool) (*poller, error) {
 	}, nil
 }
 
-func (p *poller) getJob(conn *RedisConn) (*job, error) {
+func (p *poller) getJob(conn StorageConn) (*job, error) {
 	for _, queue := range p.queues(p.isStrict) {
 		logger.Debugf("Checking %s", queue)
 

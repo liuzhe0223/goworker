@@ -26,7 +26,7 @@ func (w *worker) MarshalJSON() ([]byte, error) {
 	return json.Marshal(w.String())
 }
 
-func (w *worker) start(conn *RedisConn, job *job) error {
+func (w *worker) start(conn StorageConn, job *job) error {
 	work := &work{
 		Queue:   job.Queue,
 		RunAt:   time.Now(),
@@ -44,7 +44,7 @@ func (w *worker) start(conn *RedisConn, job *job) error {
 	return w.process.start(conn)
 }
 
-func (w *worker) fail(conn *RedisConn, job *job, err error) error {
+func (w *worker) fail(conn StorageConn, job *job, err error) error {
 	failure := &failure{
 		FailedAt:  time.Now(),
 		Payload:   job.Payload,
@@ -62,14 +62,14 @@ func (w *worker) fail(conn *RedisConn, job *job, err error) error {
 	return w.process.fail(conn)
 }
 
-func (w *worker) succeed(conn *RedisConn, job *job) error {
+func (w *worker) succeed(conn StorageConn, job *job) error {
 	conn.Incr(fmt.Sprintf("%sstat:processed", namespace))
 	conn.Incr(fmt.Sprintf("%sstat:processed:%s", namespace, w))
 
 	return nil
 }
 
-func (w *worker) finish(conn *RedisConn, job *job, err error) error {
+func (w *worker) finish(conn StorageConn, job *job, err error) error {
 	if err != nil {
 		w.fail(conn, job, err)
 	} else {

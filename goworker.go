@@ -40,20 +40,20 @@ func Init() error {
 // connection will cause concurrent worker functions to lock
 // while they wait for an available connection. Expect this
 // API to change drastically.
-func GetConn() (*RedisConn, error) {
+func GetConn() (StorageConn, error) {
 	resource, err := pool.Get()
 
 	if err != nil {
 		return nil, err
 	}
-	return resource.(*RedisConn), nil
+	return resource.(StorageConn), nil
 }
 
 // PutConn puts a connection back into the connection pool.
 // Run this as soon as you finish using a connection that
 // you got from GetConn. Expect this API to change
 // drastically.
-func PutConn(conn *RedisConn) {
+func PutConn(conn StorageConn) {
 	pool.Put(conn)
 }
 
