@@ -82,35 +82,34 @@ func redisConnFromUri(uriString string) (*RedisConn, error) {
 	return &RedisConn{Conn: conn}, nil
 }
 
-func (conn *RedisConn) Set(key string, value interface{}) {
-	conn.Send("SET", key, value)
+func (conn *RedisConn) Set(key string, value interface{}) error {
+	return conn.Send("SET", key, value)
 }
 
-func (conn *RedisConn) Lpush(key string, value interface{}) {
-	conn.Send("LPUSH", key, value)
+func (conn *RedisConn) Lpush(key string, value interface{}) error {
+	return conn.Send("LPUSH", key, value)
 }
 
-func (conn *RedisConn) Rpush(key string, value interface{}) {
-	conn.Send("RPUSH", key, value)
+func (conn *RedisConn) Rpush(key string, value interface{}) error {
+	return conn.Send("RPUSH", key, value)
 }
 
 func (conn *RedisConn) Lpop(key string) (reply interface{}, err error) {
-	reply, err = conn.Do("LPOP", key)
-	return
+	return conn.Do("LPOP", key)
 }
 
-func (conn *RedisConn) Incr(key string) {
-	conn.Send("INCR", key)
+func (conn *RedisConn) Incr(key string) error {
+	return conn.Send("INCR", key)
 }
 
-func (conn *RedisConn) Sadd(key string, value interface{}) {
-	conn.Send("SADD", key, value)
+func (conn *RedisConn) Sadd(key string, value interface{}) error {
+	return conn.Send("SADD", key, value)
 }
 
-func (conn *RedisConn) Srem(key string, value interface{}) {
-	conn.Send("SREM", key, value)
+func (conn *RedisConn) Srem(key string, value interface{}) error {
+	return conn.Send("SREM", key, value)
 }
 
-func (conn *RedisConn) Del(key string) {
-	conn.Send("DEL", key)
+func (conn *RedisConn) Del(key string) error {
+	return conn.Send("DEL", key)
 }
